@@ -8,17 +8,26 @@ import (
 
 func main() {
 	g := game.NewGame(1, 3)
-	fmt.Println(g.ID)
-	fmt.Println(g.Level)
-	fmt.Println(g.Status)
 
-	// 盤目の地雷確認
+	fmt.Println("==== 開ける前 ===")
+	printBoard(g)
+
+	g.OpenCell(0, 1)
+
+	fmt.Println("==== (0,1)を開けた後 ===")
+	printBoard(g)
+}
+
+func printBoard(g *game.Game) {
 	for _, row := range g.Board {
 		for _, cell := range row {
+
 			if cell.HasMine {
-				fmt.Print("🐱")
+				fmt.Print("🐱 ")
+			} else if cell.IsOpen {
+				fmt.Printf("%d ", cell.Adjacent)
 			} else {
-				fmt.Print("・ ")
+				fmt.Print("？ ")
 			}
 		}
 		fmt.Println()
