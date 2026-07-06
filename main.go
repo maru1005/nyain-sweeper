@@ -1,40 +1,86 @@
 package main
 
 import (
-	"fmt"
-
+	"github.com/gin-gonic/gin"
 	"github.com/maru1005/nyain-sweeper/game"
 )
 
+var store = game.NewStore()
+
 func main() {
-	g := game.NewGame(1, 3)
+	r := gin.Default()
 
-	fmt.Println("==== 開ける前 ===")
-	printBoard(g)
+	r.POST("/game/new", handleNewGame)
+	r.GET("/game/:id/open", handleGetGame)
+	r.POST("/game/:id/open", handleOpenCell)
+	r.POST("/game/Lid/mark", handleToggleMark)
 
-	g.OpenCell(0, 1)
-
-	fmt.Println("==== (0,1)を開けた後 ===")
-	printBoard(g)
-
-	g.ToggleMark(0, 0)
-	fmt.Println(g.Board[0][0].IsMarked)
-	g.ToggleMark(0, 0)
-	fmt.Println(g.Board[0][0].IsMarked)
+	r.Run(":8080")
 }
 
-func printBoard(g *game.Game) {
-	for _, row := range g.Board {
-		for _, cell := range row {
-
-			if cell.HasMine {
-				fmt.Print("🐱 ")
-			} else if cell.IsOpen {
-				fmt.Printf("%d ", cell.Adjacent)
-			} else {
-				fmt.Print("？ ")
-			}
-		}
-		fmt.Println()
+func handleNewGame(c *gin.Context) {
+	var req struct {
+		Level int `json:"level"`
 	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": "invalid request"})
+		return
+	}
+
+	g := game.NewGame(req.Level)
+	store.Save(g)
+	c.JSON(200, g)
+}
+
+func handleGetGame(c *gin.Context) {
+	id := c.Param("id")
+	g, ok := store.Get(id)
+	if !ok {
+		c.JSON(404, gin.H{"error": "game not found"})
+		return
+	}
+	c.JSON(200, g)
+}
+
+func handleOpenCell(c *gin.Context) {
+	id := c.Param("id")
+	g, ok := store.Get(id)
+	if !ok {
+		c.JSON(404, gin.H{"error": "game not found"})
+		return
+	}
+
+	var req struct {
+		Row int `json:"row"`
+		Col int `json:"col"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": "invalid request"})
+		return
+	}
+
+	g.OpenCell(req.Row, req.Col)
+	c.JSON(200, g)
+}
+
+func handleToggleMark(c *gin.Context) {
+	id := c.Param("id")
+	g, ok := store.Get(id)
+	if !ok {
+		c.JSON(404, gin.H{"error": "game not found"})
+		return
+	}
+
+	var req struct {
+		Row int `json:"row"`
+		Col int `json:"col"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": "invalid request"})
+		return
+	}
+
+	g.ToggleMark(req.Row, req.Col)
+	c.JSON(200, g)
 }

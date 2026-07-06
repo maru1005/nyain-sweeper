@@ -7,22 +7,25 @@ import (
 )
 
 type Cell struct {
-	HasMine  bool
-	IsOpen   bool
-	IsMarked bool
-	Adjacent int
+	HasMine  bool `json:"-"`
+	IsOpen   bool `json:"isOpen"`
+	IsMarked bool `json:"isMarked"`
+	Adjacent int  `json:"adjacent"`
 }
 
 type Game struct {
-	ID      string
-	Board   [][]Cell
-	Status  string
-	Level   int
-	CatType string
+	ID      string   `json:"id"`
+	Board   [][]Cell `json:"board"`
+	Status  string   `json:"status"`
+	Level   int      `json:"level"`
+	CatType string   `json:"catType"`
 }
 
-func NewGame(level int, mineCount int) *Game {
+var mineCounts = []int{0, 3, 5, 7, 9, 12, 20, 24, 28, 33, 58}
+
+func NewGame(level int) *Game {
 	size := level + 4
+	mineCount := mineCounts[level]
 
 	board := make([][]Cell, size)
 	for i := range board {
