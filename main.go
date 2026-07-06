@@ -16,6 +16,11 @@ func main() {
 
 	fmt.Println("==== (0,1)を開けた後 ===")
 	printBoard(g)
+
+	g.ToggleMark(0, 0)
+	fmt.Println(g.Board[0][0].IsMarked)
+	g.ToggleMark(0, 0)
+	fmt.Println(g.Board[0][0].IsMarked)
 }
 
 func printBoard(g *game.Game) {
