@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -11,26 +10,38 @@ export default function Home() {
   const [screen, setScreen] = useState<Screen>("start");
   const [gameId, setGameId] = useState<string>("");
   const [level, setLevel] = useState<number>(1);
-  const [isTimeAttack, setIsTimeAttack] =useState<boolean>(false);
+  const [isTimeAttack, setIsTimeAttack] = useState<boolean>(false);
+  const [gameStatus, setGameStatus] = useState<"won" | "lost">("lost");
 
   return (
     <main className="flex min-h-screen items-center justify-center">
-      <div className="w-[480] border-4 border-black bg-[#c8c8c8] p-4">
+      <div className="w-120 border-4 border-black bg-[#c8c8c8] p-4">
         {screen === "start" && (
           <StartScreen
-          onStart={(lv, timeAttack) => {
-            setLevel(lv);
-            setIsTimeAttack(timeAttack);
-            setScreen("game");
-          }}
+            onStart={(lv, timeAttack) => {
+              setLevel(lv);
+              setIsTimeAttack(timeAttack);
+              setScreen("game");
+            }}
+          />
+        )}
+        {screen === "game" && (
+          <GameScreen
+            level={level}
+            isTimeAttack={isTimeAttack}
+            onGameOver={(id, status) => {
+              setGameId(id);
+              setGameStatus(status);
+              setScreen("result");
+            }}
           />
         )}
         {screen === "result" && (
           <ResultScreen
-          gameId={gameId}
-          level={level}
-          onRetry={() => setScreen("game")}
-          onBack={() => setScreen("start")}
+            level={level}
+            status={gameStatus}
+            onRetry={() => setScreen("game")}
+            onBack={() => setScreen("start")}
           />
         )}
       </div>

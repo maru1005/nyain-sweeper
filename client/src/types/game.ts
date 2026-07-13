@@ -9,7 +9,7 @@ export type Cell = {
 export type Game ={
     id :string
     board: Cell[][]
-    status: "playing" | "game" | "lost"
+    status: "playing" | "won" | "lost"
     level: number
     catType: string
 }
