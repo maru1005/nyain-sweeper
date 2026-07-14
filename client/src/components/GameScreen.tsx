@@ -12,6 +12,7 @@ type Props = {
 export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
   const [game, setGame] = useState<Game | null>(null);
   const [isMarkMode, setIsMarkMode] = useState(false);
+  const [time, setTime] = useState(0);
 
   const startGame = useCallback(async () => {
     const res = await fetch("http://localhost:8080/game/new", {
@@ -24,8 +25,19 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
   }, [level]);
 
   useEffect(() => {
-    startGame().catch(console.error);
-  }, [startGame]);
+    (async () => {
+      await startGame();
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!isTimeAttack || game?.status !== "playing") return;
+    const timer = setInterval(() => {
+      setTime((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [game?.status, isTimeAttack]);
 
   const handleCellClick = async (row: number, col: number) => {
     const endpoint = isMarkMode ? "mark" : "open";
@@ -50,6 +62,11 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
   return (
     <div className="flex flex-col gap-4">
       {/*  ヘッダー */}
+      {isTimeAttack && (
+        <div className="font-pixel text-xs">
+          {Math.floor(time / 60)}:{String(time % 60).padStart(2, "0")}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div className="font-picel border-2 border-black px-3 py-2 text-sm">
           🐾 {game.board.flat().filter((c) => c.isMarked).length}
