@@ -6,7 +6,7 @@ import { Game } from "@/src/types/game";
 type Props = {
   level: number;
   isTimeAttack: boolean;
-  onGameOver: (id: string, status: "won" | "lost") => void;
+  onGameOver: (id: string, status: "won" | "lost", time: number) => void;
 };
 
 export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
@@ -53,7 +53,7 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
     setGame(data);
 
     if (data.status !== "playing") {
-      onGameOver(data.id, data.status as "won" | "lost");
+      onGameOver(data.id, data.status as "won" | "lost", time);
     }
   };
 

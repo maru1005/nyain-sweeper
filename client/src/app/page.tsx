@@ -8,10 +8,11 @@ import ResultScreen from "@/src/components/ResultScreen";
 
 export default function Home() {
   const [screen, setScreen] = useState<Screen>("start");
-  const [gameId, setGameId] = useState<string>("");
+
   const [level, setLevel] = useState<number>(1);
   const [isTimeAttack, setIsTimeAttack] = useState<boolean>(false);
   const [gameStatus, setGameStatus] = useState<"won" | "lost">("lost");
+  const [gameTime, setGameTime] = useState(0);
 
   return (
     <main className="flex min-h-screen items-center justify-center">
@@ -29,9 +30,9 @@ export default function Home() {
           <GameScreen
             level={level}
             isTimeAttack={isTimeAttack}
-            onGameOver={(id, status) => {
-              setGameId(id);
+            onGameOver={(id, status, time) => {
               setGameStatus(status);
+              setGameTime(time);
               setScreen("result");
             }}
           />
@@ -40,6 +41,8 @@ export default function Home() {
           <ResultScreen
             level={level}
             status={gameStatus}
+            time={gameTime}
+            isTimeAttack={isTimeAttack}
             onRetry={() => setScreen("game")}
             onBack={() => setScreen("start")}
           />

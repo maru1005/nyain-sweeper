@@ -3,6 +3,8 @@
 type Props = {
   level: number;
   status: "won" | "lost";
+  time: number;
+  isTimeAttack: boolean;
   onRetry: () => void;
   onBack: () => void;
 };
@@ -10,6 +12,8 @@ type Props = {
 export default function ResultScreen({
   level,
   status,
+  time,
+  isTimeAttack,
   onRetry,
   onBack,
 }: Props) {
@@ -27,6 +31,12 @@ export default function ResultScreen({
       <div className="font-pixel border-2 border-black px-4 py-2 text-sm">
         Lv. {level}
       </div>
+
+      {isTimeAttack && (
+        <div className="font-pixel text-sm">
+          {Math.floor(time / 60)}:{String(time % 60).padStart(2, "0")}
+        </div>
+      )}
 
       <button
         onClick={onRetry}
