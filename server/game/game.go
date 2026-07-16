@@ -21,6 +21,21 @@ type Game struct {
 	CatType string   `json:"catType"`
 }
 
+type CellResponse struct {
+	HasMine  bool `json:"hasMine,omitempty"`
+	IsOpen   bool `json:"isOpen"`
+	IsMarked bool `json:"isMarked"`
+	Adjacent int  `json:"adjacent"`
+}
+
+type GameResponse struct {
+	ID      string           `json:"id"`
+	Board   [][]CellResponse `json:"board"`
+	Status  string           `json:"status"`
+	Level   int              `json:"level"`
+	CatType string           `json:"catType"`
+}
+
 var mineCounts = []int{0, 3, 5, 7, 9, 12, 20, 24, 28, 33, 58}
 
 func NewGame(level int) *Game {
@@ -139,4 +154,26 @@ func (g *Game) ToggleMark(row, col int) {
 		return
 	}
 	cell.IsMarked = !cell.IsMarked
+}
+
+func (g *Game) ToResponse() GameResponse {
+	board := make([][]CellResponse, len(g.Board))
+	for r, row := range g.Board {
+		board[r] = make([]CellResponse, len(row))
+		for c, cell := range row {
+			board[r][c] = CellResponse{
+				HasMine:  g.Status == "lost" && cell.HasMine,
+				IsOpen:   cell.IsOpen,
+				IsMarked: cell.IsMarked,
+				Adjacent: cell.Adjacent,
+			}
+		}
+	}
+	return GameResponse{
+		ID:      g.ID,
+		Board:   board,
+		Status:  g.Status,
+		Level:   g.Level,
+		CatType: g.CatType,
+	}
 }

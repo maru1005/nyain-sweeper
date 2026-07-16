@@ -36,7 +36,7 @@ func handleNewGame(c *gin.Context) {
 
 	g := game.NewGame(req.Level)
 	store.Save(g)
-	c.JSON(200, g)
+	c.JSON(200, g.ToResponse())
 }
 
 func handleGetGame(c *gin.Context) {
@@ -46,7 +46,7 @@ func handleGetGame(c *gin.Context) {
 		c.JSON(404, gin.H{"error": "game not found"})
 		return
 	}
-	c.JSON(200, g)
+	c.JSON(200, g.ToResponse())
 }
 
 func handleOpenCell(c *gin.Context) {
@@ -68,7 +68,7 @@ func handleOpenCell(c *gin.Context) {
 	}
 
 	g.OpenCell(req.Row, req.Col)
-	c.JSON(200, g)
+	c.JSON(200, g.ToResponse())
 }
 
 func handleToggleMark(c *gin.Context) {
@@ -89,5 +89,5 @@ func handleToggleMark(c *gin.Context) {
 	}
 
 	g.ToggleMark(req.Row, req.Col)
-	c.JSON(200, g)
+	c.JSON(200, g.ToResponse())
 }
