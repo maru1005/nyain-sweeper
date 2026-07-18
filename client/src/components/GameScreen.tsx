@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Game } from "@/src/types/game";
+import CatSprite from "@/src/components/CatSprite";
+import { LEVEL_INFO } from "../constants/game";
+import Image from "next/image";
 
 type Props = {
   level: number;
@@ -13,6 +16,7 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
   const [game, setGame] = useState<Game | null>(null);
   const [isMarkMode, setIsMarkMode] = useState(false);
   const [time, setTime] = useState(0);
+  const [catIndexes, setCatIndexes] = useState<number[][]>([]);
 
   const startGame = useCallback(async () => {
     const res = await fetch("http://localhost:8080/game/new", {
@@ -22,6 +26,12 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
     });
     const data: Game = await res.json();
     setGame(data);
+    // セルに入る猫　サイズ　柄ランダム
+    const size = data.board.length;
+    const indexes = Array.from({ length: size }, () =>
+      Array.from({ length: size }, () => Math.floor(Math.random() * 16)),
+    );
+    setCatIndexes(indexes);
   }, [level]);
 
   useEffect(() => {
@@ -53,11 +63,16 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
     setGame(data);
 
     if (data.status !== "playing") {
-      onGameOver(data.id, data.status as "won" | "lost", time);
+      const delay = data.status === "lost" ? 2500 : 0;
+      setTimeout(() => {
+        onGameOver(data.id, data.status as "won" | "lost", time);
+      }, delay);
     }
   };
 
   if (!game) return <div className="font-Pixel p-4">読み込み中🐾🐾🐾</div>;
+
+  const cellSize = Math.floor(420 / game.board[0].length);
 
   return (
     <div className="flex flex-col gap-4">
@@ -68,9 +83,6 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
         </div>
       )}
       <div className="flex items-center justify-between">
-        <div className="font-picel border-2 border-black px-3 py-2 text-sm">
-          🐾 {game.board.flat().filter((c) => c.isMarked).length}
-        </div>
         <div className="font-pixel border-2 border-black px-3 py-2 text-sm">
           Lv. {game.level}
         </div>
@@ -85,18 +97,23 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
       {/* 盤面 */}
       <div
         className="grid gap-0.5"
-        style={{ gridTemplateColumns: `repeat(${game.board[0].length}, 1fr)` }}
+        style={{
+          gridTemplateColumns: `repeat(${game.board[0].length}, 1fr)`,
+        }}
       >
         {game.board.map((row, r) =>
           row.map((cell, c) => (
             <button
               key={`${r}-${c}`}
               onClick={() => handleCellClick(r, c)}
-              className={`aspect-square border border-black text-xs font-pixel flex items-center justify-center ${
+              className={`aspect-square border border-black text-xs font-pixel flex items-center justify-center overflow-hidden ${
                 cell.isOpen ? "bg-[#b0b0b0]" : "bg-[#c8c8c8]"
               }`}
             >
-              {cell.isOpen && cell.adjacent > 0 && (
+              {cell.hasMine && catIndexes[r]?.[c] !== undefined && (
+                <CatSprite index={catIndexes[r][c]} size={cellSize - 4} />
+              )}
+              {!cell.hasMine && cell.isOpen && cell.adjacent > 0 && (
                 <span
                   className={
                     cell.adjacent === 1
@@ -109,19 +126,39 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
                   {cell.adjacent}
                 </span>
               )}
-              {cell.isMarked && !cell.isOpen && "🐾"}
+              {!cell.hasMine && cell.isMarked && !cell.isOpen && (
+                <Image
+                  src="/paw.png"
+                  width={cellSize - 8}
+                  height={cellSize - 8}
+                  alt="paw"
+                />
+              )}
             </button>
           )),
         )}
       </div>
 
       {/* 探す */}
-      <button
-        onClick={() => setIsMarkMode(!isMarkMode)}
-        className="font-pixel border-2 border-black bg-[#c8c8c8] py-2 text-xs"
-      >
-        🐾探すモード :{isMarkMode ? "ON" : "OFF"}
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={() => setIsMarkMode(!isMarkMode)}
+          className="font-pixel border-2 border-black bg-[#c8c8c8] py-2 text-xs w-40"
+        >
+          🐾　Mark:{isMarkMode ? "ON" : "OFF"}
+        </button>
+        <div className="font-pixel border-2 border-black bg-[#c8c8c8] px-3 py-2 text-xs flex items-center gap-1">
+          <Image
+            src="/paw.png"
+            width={16}
+            height={16}
+            alt="paw"
+            className="inline mr-1"
+          />
+          {LEVEL_INFO[game.level - 1].mines -
+            game.board.flat().filter((c) => c.isMarked).length}
+        </div>
+      </div>
     </div>
   );
 }
