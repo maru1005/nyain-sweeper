@@ -12,3 +12,16 @@ body {
   background: #c0c0c0;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes sweep {
+  from {
+    transform: translateX(-100px);
+  }
+  to {
+    transform: translateX(500px);
+  }
+}
+
+.animate-sweep {
+  animation: sweep 2s linear infinite;
+}

@@ -13,6 +13,7 @@ export default function Home() {
   const [isTimeAttack, setIsTimeAttack] = useState<boolean>(false);
   const [gameStatus, setGameStatus] = useState<"won" | "lost">("lost");
   const [gameTime, setGameTime] = useState(0);
+  const [catType, setCatType] = useState<1 | 2 | 3>(1);
 
   return (
     <main className="flex min-h-screen items-center justify-center">
@@ -22,6 +23,7 @@ export default function Home() {
             onStart={(lv, timeAttack) => {
               setLevel(lv);
               setIsTimeAttack(timeAttack);
+              setCatType((Math.floor(Math.random() * 3) + 1) as 1 | 2 | 3);
               setScreen("game");
             }}
           />
@@ -43,6 +45,7 @@ export default function Home() {
             status={gameStatus}
             time={gameTime}
             isTimeAttack={isTimeAttack}
+            catType={catType}
             onRetry={() => setScreen("game")}
             onBack={() => setScreen("start")}
           />
