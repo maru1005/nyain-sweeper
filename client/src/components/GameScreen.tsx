@@ -86,11 +86,8 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
         <div className="font-pixel border-2 border-black px-3 py-2 text-sm">
           Lv. {game.level}
         </div>
-        <button
-          onClick={startGame}
-          className="border-2 border-black bg-[#c8c8c8] px-3 py-2 text-sm"
-        >
-          🔄
+        <button onClick={startGame} className="bg-[#c8c8c8]">
+          <Image src="/reicon.png" width={48} height={48} alt="rest" />
         </button>
       </div>
 

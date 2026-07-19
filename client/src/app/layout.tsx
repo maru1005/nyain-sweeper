@@ -18,6 +18,9 @@ const dotGothic = DotGothic16({
 export const metadata: Metadata = {
   title: "にゃいんスイーパー",
   description: "ねこ踏まにゃい！",
+  icons: {
+    icon: "/paw.png",
+  },
 };
 
 export default function RootLayout({

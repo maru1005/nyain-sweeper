@@ -16,13 +16,11 @@ export default function StartScreen({ onStart }: Props) {
   return (
     <div className="flex flex-col  gap-6 p-4">
       <h1 className="font-dot-gothic text-center text-2xl leading-loose">
-        にゃいん
-        <br />
-        スイーパー
+        にゃいんスイーパー！
       </h1>
       <p className="font-dot-gothic text-center text-xs">ねこ踏まにゃい！</p>
       <div>
-        <p className="font-pixel text-xs mb-3">▶︎　レベルを選ぶ</p>
+        <p className="font-pixel text-xs mb-3">▶︎　Select Level</p>
         <div className="grid grid-cols-5 gap-2">
           {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
             <button
@@ -39,12 +37,12 @@ export default function StartScreen({ onStart }: Props) {
           ))}
         </div>
         <p className="font-pixel text-center text-sm mt-3">
-          {info.size}×{info.size} ・　ねこ　{info.mines}にゃん
+          {info.size}×{info.size} ・　{info.mines}Cats
         </p>
       </div>
 
       <div className="flex items-center justify-between border-2 border-black p-3">
-        <span className="font-pixel text-xs">⏱ タイムアタック</span>
+        <span className="font-pixel text-xs">⏱ Time Attack</span>
         <button
           onClick={() => setIsTimeAttack(!isTimeAttack)}
           className="font-pixel border-2 border-black bg=[#c8c8c8] px-3 py-1 text-xs"
@@ -57,7 +55,7 @@ export default function StartScreen({ onStart }: Props) {
         onClick={() => onStart(selectedLevel, isTimeAttack)}
         className="font-pixel border-2 border-black bg-[#555] py-4 text-white text-sm"
       >
-        スタート
+        Start🐾
       </button>
     </div>
   );

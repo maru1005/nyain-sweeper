@@ -24,7 +24,6 @@ export default function ResultScreen({
   onBack,
 }: Props) {
   const isWon = status === "won";
-  console.log("catType:", catType);
   const imageSrc =
     status === "won"
       ? catType === 2
@@ -41,7 +40,7 @@ export default function ResultScreen({
   const [cats] = useState<{ index: number; top: number; delay: number }[]>(() =>
     [0, 1, 2, 3, 4, 5, 6, 7].map((i) => ({
       index: Math.floor(Math.random() * 16),
-      top: Math.floor(Math.random() * 70),
+      top: Math.floor(Math.random() * 90),
       delay: i * 0.3,
     })),
   );
@@ -57,6 +56,7 @@ export default function ResultScreen({
               style={{
                 animationDelay: `${cat.delay}s`,
                 top: `${cat.top}%`,
+                animationFillMode: "backwards",
               }}
             >
               <CatSprite index={cat.index} size={40} />
@@ -72,7 +72,10 @@ export default function ResultScreen({
         <p className="font-dot-gothic text-sm">
           {isWon ? "にゃにゃにゃ" : "ねこふんじゃった！"}
         </p>
-        <Image src={imageSrc} width={240} height={240} alt="cat" />
+
+        <div className={isWon ? "" : "animate-bounce-angry"}>
+          <Image src={imageSrc} width={300} height={300} alt="cat" />
+        </div>
 
         <div className="font-pixel border-2 border-black px-4 py-2 text-sm">
           Lv. {level}
