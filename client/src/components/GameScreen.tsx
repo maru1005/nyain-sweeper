@@ -19,7 +19,7 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
   const [catIndexes, setCatIndexes] = useState<number[][]>([]);
 
   const startGame = useCallback(async () => {
-    const res = await fetch("http://localhost:8080/game/new", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/game/new`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ level }),
@@ -52,7 +52,7 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
   const handleCellClick = async (row: number, col: number) => {
     const endpoint = isMarkMode ? "mark" : "open";
     const res = await fetch(
-      `http://localhost:8080/game/${game!.id}/${endpoint}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/game/${game!.id}/${endpoint}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
