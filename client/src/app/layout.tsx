@@ -33,7 +33,7 @@ export default function RootLayout({
       lang="ja"
       className={`${pixelFont.variable} ${dotGothic.variable} h-full`}
     >
-      <body className="min-h-full bg-[#c0c0c0]">{children}</body>
+      <body className="min-h-full bg-[#c0c0c0] ">{children}</body>
     </html>
   );
 }
