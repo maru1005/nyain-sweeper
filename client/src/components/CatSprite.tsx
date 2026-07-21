@@ -10,13 +10,16 @@ export default function CatSprite({ index, size = 32 }: Props) {
   return (
     <div
       style={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
         width: `${size}px`,
         height: `${size}px`,
         backgroundImage: "url('/koma.png')",
         backgroundSize: `${size * 4}px ${size * 4}px`,
         backgroundPosition: `-${col * size}px -${row * size}px`,
         backgroundRepeat: "no-repeat",
-        margin: "auto",
       }}
     />
   );
