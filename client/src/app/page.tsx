@@ -16,7 +16,10 @@ export default function Home() {
   const [catType, setCatType] = useState<1 | 2 | 3>(1);
 
   return (
-    <main className="flex h-screen items-center justify-center">
+    <main
+      className="flex items-center justify-center overflow-hidden"
+      style={{ height: "100dvh" }}
+    >
       <div className="w-120 border-4 border-black bg-[#c8c8c8] p-4">
         {screen === "start" && (
           <StartScreen
