@@ -108,7 +108,9 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
               }`}
             >
               {cell.hasMine && catIndexes[r]?.[c] !== undefined && (
-                <CatSprite index={catIndexes[r][c]} size={cellSize - 4} />
+                <span className="flex items-center justify-center w-full h-full">
+                  <CatSprite index={catIndexes[r][c]} size={cellSize - 4} />
+                </span>
               )}
               {!cell.hasMine && cell.isOpen && cell.adjacent > 0 && (
                 <span
