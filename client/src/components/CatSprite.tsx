@@ -18,7 +18,7 @@ export default function CatSprite({ index, size = 32 }: Props) {
         backgroundRepeat: "no-repeat",
         display: "inline-block",
       }}
-      className="mx-auto"
+      className="mx-auto my-auto"
     />
   );
 }

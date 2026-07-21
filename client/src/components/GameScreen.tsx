@@ -103,7 +103,7 @@ export default function GameScreen({ level, isTimeAttack, onGameOver }: Props) {
             <button
               key={`${r}-${c}`}
               onClick={() => handleCellClick(r, c)}
-              className={`aspect-square border border-black text-xs font-pixel flex items-center justify-center  ${
+              className={`aspect-square border border-black text-xs font-pixel flex items-center justify-center overflow-hidden ${
                 cell.isOpen ? "bg-[#b0b0b0]" : "bg-[#c8c8c8]"
               }`}
             >
