@@ -31,9 +31,11 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${pixelFont.variable} ${dotGothic.variable} h-screen overflow-hidden`}
+      className={`${pixelFont.variable} ${dotGothic.variable} h-[100svh] overflow-hidden`}
     >
-      <body className="bg-[#c0c0c0] overflow-hidden">{children}</body>
+      <body className="bg-[#c0c0c0] h-[100svh] overflow-hidden">
+        {children}
+      </body>
     </html>
   );
 }
